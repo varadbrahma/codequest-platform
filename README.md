@@ -41,6 +41,12 @@ py -m http.server 8000 --directory frontend
 
 Open `http://localhost:8000`. The API health check is available at `http://localhost:8001/health/ready`; interactive API documentation is at `http://localhost:8001/docs`.
 
+## Deploy the frontend to Vercel
+
+Import this repository and deploy it with the repository root (`.`) as Vercel's **Root Directory**. The root `vercel.json` rewrites requests to the static frontend in `frontend/`, so the deployed site opens at `/` and its relative `config.js` path continues to resolve. Leave the framework preset as **Other** and the build command and output directory empty; no frontend build step is required.
+
+The FastAPI backend is not included in this static frontend deployment. Configure and deploy it separately, then set `CODEQUEST_API_BASE` in `frontend/config.js` to its public API URL. Supabase authentication and isolated Java/C++ execution also remain unavailable until their project and runner settings are configured.
+
 The CORS setting must list exact frontend origins. Do not set it to `*`. The sample `.env` is development configuration, not production secrets. Start Uvicorn with `--env-file .env` so it loads the file.
 
 ## Configure Supabase, Google sign-in, and email/password accounts
