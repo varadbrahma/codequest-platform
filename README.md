@@ -41,11 +41,16 @@ py -m http.server 8000 --directory frontend
 
 Open `http://localhost:8000`. The API health check is available at `http://localhost:8001/health/ready`; interactive API documentation is at `http://localhost:8001/docs`.
 
-## Deploy the frontend to Vercel
+## Deploy to Vercel
 
-Import this repository and deploy it with the repository root (`.`) as Vercel's **Root Directory**. The root `vercel.json` rewrites requests to the static frontend in `frontend/`, so the deployed site opens at `/` and its relative `config.js` path continues to resolve. Leave the framework preset as **Other** and the build command and output directory empty; no frontend build step is required.
+This repository is a monorepo with two separate Vercel projects. Import the same GitHub repository for each project, and set each project's **Root Directory** to its application folder:
 
-The FastAPI backend is not included in this static frontend deployment. Configure and deploy it separately, then set `CODEQUEST_API_BASE` in `frontend/config.js` to its public API URL. Supabase authentication and isolated Java/C++ execution also remain unavailable until their project and runner settings are configured.
+| Vercel project | Root Directory | Framework / build |
+| --- | --- | --- |
+| Frontend | `frontend` | Other; no build or install command required. Vercel serves `index.html` and `config.js` as static files. |
+| API | `backend` | FastAPI; keep the detected Python build settings. The ASGI application is `app/main.py`, with dependencies in `requirements.txt`. |
+
+Do not deploy the repository root as a third project: it contains neither app's runtime root. The FastAPI backend needs its own deployment and environment variables. Set `CODEQUEST_API_BASE` in `frontend/config.js` to the API deployment URL, and configure `CODEQUEST_CORS_ORIGINS` on the API to include the exact frontend production origin. Supabase authentication and isolated Java/C++ execution additionally require their project and runner settings.
 
 The CORS setting must list exact frontend origins. Do not set it to `*`. The sample `.env` is development configuration, not production secrets. Start Uvicorn with `--env-file .env` so it loads the file.
 

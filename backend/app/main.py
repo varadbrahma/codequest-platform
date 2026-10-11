@@ -8,7 +8,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from backend.app.runner import run_mission
+from .runner import run_mission
 
 MISSION_XP = {
     1: 30,
